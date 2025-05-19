@@ -2,8 +2,8 @@
 // Damn Vulnerable DeFi v4 (https://damnvulnerabledefi.xyz)
 pragma solidity =0.8.25;
 
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {Address} from "../../lib/openzeppelin-contracts/contracts/utils/Address.sol";
+import {ReentrancyGuard} from "../../lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
 import {DamnValuableToken} from "../DamnValuableToken.sol";
 
 contract TrusterLenderPool is ReentrancyGuard {
